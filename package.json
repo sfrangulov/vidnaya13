@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "description": "",
   "dependencies": {
-	"express": "*"
+	"express": "*",
+  "pg": "*"
    },
   "engine": "node >=0.6.x"
 }
