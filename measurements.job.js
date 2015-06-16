@@ -14,7 +14,7 @@ function shell_exec(cmd, cb) {
 function xively_insert(title, value, source) {
     var XivelyClient = require('xively');
     var x = new XivelyClient();
-    x.setKey('HU9dzlQFFEiYvI4EYquXSJ3QUaizZ22cuH4NFiGWjPfiWcl3');
+    x.setKey('hMNFWqGECoE5E8QOh7OXZ8xiIxjpEWszMVuatSzFURouayEt');
     var id = source + "." + title;
     id = id.replace(/\./g,'_');
     var dp = {
@@ -67,8 +67,10 @@ shell_exec('upsc ups@localhost', function(ret) {
         for (var i = 1; i<arr.length - 1; i++) {
             row = arr[i].split(': ');
             if (row[0] == 'input.voltage' || row[0] == 'battery.voltage' || row[0] == 'ups.status')
+            {
                 pg_insert(row[0], row[1], 'vidnaya13x.ups');
                 xively_insert(row[0], row[1], 'vidnaya13x.ups');
+            }
         }
     }
 });
