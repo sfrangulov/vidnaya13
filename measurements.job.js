@@ -11,6 +11,27 @@ function shell_exec(cmd, cb) {
     cb('');
 }
 
+function xively_insert(title, value, source) {
+    var XivelyClient = require('xively');
+    var x = new XivelyClient();
+    x.setKey('HU9dzlQFFEiYvI4EYquXSJ3QUaizZ22cuH4NFiGWjPfiWcl3');
+    var id = source + "." + title;
+    id = id.replace(/\./g,'_');
+    var dp = {
+          "version":"1.0.0",
+           "datastreams" : [
+          {
+              "id" : id,
+              "current_value" : value
+          }
+        ]
+    }
+    x.feed.new('252983769', {
+          data_point: dp,
+          callback: function(e) { }
+    });
+}
+
 function pg_insert(title, value, source) {
     var pg = require('pg');
 
@@ -34,6 +55,8 @@ shell_exec('/usr/local/bin/pcsensor -n2 -c', function(ret) {
         var t1 = ret.split('\n')[1].split(' ')[3].replace('C', '');
         pg_insert('t0', t0, 'vidnaya13x.temper');
         pg_insert('t1', t1, 'vidnaya13x.temper');
+        xively_insert('t0', t0, 'vidnaya13x.temper');
+        xively_insert('t1', t1, 'vidnaya13x.temper');
     }
 });
 
@@ -45,6 +68,7 @@ shell_exec('upsc ups@localhost', function(ret) {
             row = arr[i].split(': ');
             if (row[0] == 'input.voltage' || row[0] == 'battery.voltage' || row[0] == 'ups.status')
                 pg_insert(row[0], row[1], 'vidnaya13x.ups');
+                xively_insert(row[0], row[1], 'vidnaya13x.ups');
         }
     }
 });
